@@ -16,3 +16,9 @@ Enjoy!
 - requires familiarity with nearly all of the underlying protocols
 - masks/values APIs very brittle (order-dependent!)
 - cookie/reply and cookie/check APIs somewhat painful (async hell?)
+
+## sdl
+
+- complexity quite reasonable, just a lot of flags to look through
+- documentation quite reasonable, includes (correct!) examples as well
+- *lots* of valgrind issues in the library, somewhat sad
