@@ -14,23 +14,23 @@
 #define WIDTH 320
 #define HEIGHT 200
 
-xcb_connection_t *conn;
-xcb_gcontext_t gc;
-xcb_window_t win;
+static xcb_connection_t *conn;
+static xcb_gcontext_t gc;
+static xcb_window_t win;
 
-uint16_t width = WIDTH;
-uint16_t height = HEIGHT;
+static uint16_t width = WIDTH;
+static uint16_t height = HEIGHT;
 
 #define WM_PRO "WM_PROTOCOLS"
 #define WM_DEL "WM_DELETE_WINDOW"
 
-xcb_atom_t protocols_atom;
-xcb_atom_t delete_window_atom;
+static xcb_atom_t protocols_atom;
+static xcb_atom_t delete_window_atom;
 
 /*
  * Print message and exit immediately.
  */
-void
+static void
 panic(const char *msg)
 {
 	fprintf(stderr, "panic: %s\n", msg);
@@ -40,7 +40,7 @@ panic(const char *msg)
 /*
  * Panic if given cookie doesn't check out.
  */
-void
+static void
 ensure(xcb_void_cookie_t cookie, const char *msg)
 {
 	xcb_generic_error_t *error;
@@ -57,7 +57,7 @@ ensure(xcb_void_cookie_t cookie, const char *msg)
  * allocation. Since we make LOTS of colors it's cheaper to "fake" it. Besides
  * the xcb_alloc_color(3) man page encourages this for "TrueColor" displays.
  */
-uint32_t
+static uint32_t
 random_color(void)
 {
 	uint32_t r = random() % 256;
@@ -69,7 +69,7 @@ random_color(void)
 /*
  * Draw random rectangle.
  */
-void
+static void
 draw_random_rectangle(void)
 {
 	uint32_t values[1];
@@ -97,13 +97,13 @@ draw_random_rectangle(void)
  * Event handlers return 1 to stop the demo, 0 to keep running.
  */
 
-int
+static int
 handle_key_press(void)
 {
 	return 1;
 }
 
-int
+static int
 handle_client_message(xcb_generic_event_t *e)
 {
 	xcb_client_message_event_t *client = (xcb_client_message_event_t*) e;
@@ -115,7 +115,7 @@ handle_client_message(xcb_generic_event_t *e)
 	return 0;
 }
 
-int
+static int
 handle_expose(void)
 {
 	/*
@@ -132,7 +132,7 @@ handle_expose(void)
 	return 0;
 }
 
-int
+static int
 handle_default(xcb_generic_event_t *e)
 {
 	printf("log: event %p type %d ignored\n", (void*) e, e->response_type);
@@ -142,7 +142,7 @@ handle_default(xcb_generic_event_t *e)
 /*
  * Draw rectangles and handle events until done.
  */
-void
+static void
 demo(void)
 {
 	int done = 0;
@@ -173,7 +173,7 @@ demo(void)
 /*
  * Set up all the nitty-gritty.
  */
-void
+static void
 setup(void)
 {
 	int screen_number;
@@ -272,7 +272,7 @@ setup(void)
 /*
  * Clean up. Easy.
  */
-void
+static void
 cleanup(void)
 {
 	/* close connection to server, conn == NULL is no-op */
