@@ -4,3 +4,7 @@ UseTab: Always
 BreakBeforeBraces: Linux
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
+
+AlwaysBreakAfterReturnType: All
+AlignAfterOpenBracket: DontAlign
+ContinuationIndentWidth: 16

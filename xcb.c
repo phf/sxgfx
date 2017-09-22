@@ -106,10 +106,9 @@ handle_key_press(void)
 static int
 handle_client_message(xcb_generic_event_t *e)
 {
-	xcb_client_message_event_t *client = (xcb_client_message_event_t*) e;
-	if (client->type == protocols_atom && client->format == 32
-			&& client->data.data32[0] == delete_window_atom)
-	{
+	xcb_client_message_event_t *client = (xcb_client_message_event_t *)e;
+	if (client->type == protocols_atom && client->format == 32 &&
+			client->data.data32[0] == delete_window_atom) {
 		return 1;
 	}
 	return 0;
@@ -122,8 +121,8 @@ handle_expose(void)
 	 * I couldn't find a better way of doing this, there doesn't appear to
 	 * be a simple "tell me the size changed" event that actually works.
 	 */
-	xcb_get_geometry_reply_t *geo = xcb_get_geometry_reply(conn,
-			xcb_get_geometry(conn, win), NULL);
+	xcb_get_geometry_reply_t *geo = xcb_get_geometry_reply(
+			conn, xcb_get_geometry(conn, win), NULL);
 	if (geo) {
 		width = geo->width;
 		height = geo->height;
@@ -135,7 +134,7 @@ handle_expose(void)
 static int
 handle_default(xcb_generic_event_t *e)
 {
-	printf("log: event %p type %d ignored\n", (void*) e, e->response_type);
+	printf("log: event %p type %d ignored\n", (void *)e, e->response_type);
 	return 0;
 }
 
@@ -223,19 +222,19 @@ setup(void)
 	xcb_size_hints_t hints = {0}; // C99 6.7.8.21
 	xcb_icccm_size_hints_set_min_size(&hints, WIDTH, HEIGHT);
 
-	cookie = xcb_icccm_set_wm_size_hints_checked(conn, win,
-			XCB_ATOM_WM_NORMAL_HINTS, &hints);
+	cookie = xcb_icccm_set_wm_size_hints_checked(
+			conn, win, XCB_ATOM_WM_NORMAL_HINTS, &hints);
 	ensure(cookie, "cannot set size hints");
 
 	/* set window title */
 	cookie = xcb_change_property_checked(conn, XCB_PROP_MODE_REPLACE, win,
-                       XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8,
-                       strlen(TITLE), TITLE);
+			XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, strlen(TITLE),
+			TITLE);
 	ensure(cookie, "cannot change window title");
 
 	cookie = xcb_change_property_checked(conn, XCB_PROP_MODE_REPLACE, win,
-                       XCB_ATOM_WM_ICON_NAME, XCB_ATOM_STRING, 8,
-                       strlen(TITLE), TITLE);
+			XCB_ATOM_WM_ICON_NAME, XCB_ATOM_STRING, 8,
+			strlen(TITLE), TITLE);
 	ensure(cookie, "cannot change icon title");
 
 	/* set up an event if the window is closed */
@@ -253,8 +252,8 @@ setup(void)
 	free(pro);
 	free(del);
 
-	cookie = xcb_change_property_checked(conn, XCB_PROP_MODE_REPLACE,
-			win, protocols_atom, XCB_ATOM_ATOM, 32, 1,
+	cookie = xcb_change_property_checked(conn, XCB_PROP_MODE_REPLACE, win,
+			protocols_atom, XCB_ATOM_ATOM, 32, 1,
 			&delete_window_atom);
 	ensure(cookie, "cannot change window close");
 

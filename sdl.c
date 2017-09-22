@@ -4,10 +4,10 @@
  * If I am doing anything wrong with the API I'd love to hear about it.
  */
 
+#include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL.h>
 
 #define TITLE "Boxes Demo (sdl)"
 #define WIDTH 320
@@ -40,8 +40,8 @@ setup(void)
 	}
 
 	window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED,
-				  SDL_WINDOWPOS_UNDEFINED, width, height,
-				  SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE);
+			SDL_WINDOWPOS_UNDEFINED, width, height,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (window == NULL) {
 		panic("cannot create window");
 	}
@@ -114,7 +114,8 @@ demo(void)
 				done = 1;
 				break;
 			case SDL_WINDOWEVENT:
-				if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+				if (event.window.event ==
+						SDL_WINDOWEVENT_SIZE_CHANGED) {
 					width = event.window.data1;
 					height = event.window.data2;
 				}
