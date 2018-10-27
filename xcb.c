@@ -4,19 +4,20 @@
  * If I am doing anything wrong with the API I'd love to hear about it.
  */
 
+#include <xcb/xcb.h>
+#include <xcb/xcb_icccm.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_icccm.h>
 
 #define TITLE "Boxes Demo (xcb)"
 #define WIDTH 320
 #define HEIGHT 200
 
 static xcb_connection_t *conn;
-static xcb_gcontext_t gc;
 static xcb_window_t win;
+static xcb_gcontext_t gc;
 
 static uint16_t width = WIDTH;
 static uint16_t height = HEIGHT;
@@ -87,7 +88,7 @@ draw_random_rectangle(void)
 	cookie = xcb_poly_fill_rectangle_checked(conn, win, gc, 1, &rect);
 	ensure(cookie, "cannot draw rectangle");
 
-	int s = xcb_flush(conn);
+	int s = xcb_flush(conn); /* TODO why flush here? */
 	if (s <= 0) {
 		panic("failed to flush");
 	}
@@ -139,6 +140,34 @@ handle_default(xcb_generic_event_t *e)
 }
 
 /*
+ * Handle queued events.
+ */
+static int
+handle_events(void)
+{
+	int done = 0;
+	xcb_generic_event_t *e;
+	while ((e = xcb_poll_for_event(conn))) {
+		switch (e->response_type & 0x7f) {
+		case XCB_KEY_PRESS:
+			done = handle_key_press();
+			break;
+		case XCB_CLIENT_MESSAGE:
+			done = handle_client_message(e);
+			break;
+		case XCB_EXPOSE:
+			done = handle_expose();
+			break;
+		default:
+			done = handle_default(e);
+			break;
+		}
+		free(e);
+	}
+	return done;
+}
+
+/*
  * Draw rectangles and handle events until done.
  */
 static void
@@ -147,25 +176,7 @@ demo(void)
 	int done = 0;
 	while (!done) {
 		draw_random_rectangle();
-
-		xcb_generic_event_t *e;
-		while ((e = xcb_poll_for_event(conn))) {
-			switch (e->response_type & 0x7f) {
-			case XCB_KEY_PRESS:
-				done = handle_key_press();
-				break;
-			case XCB_CLIENT_MESSAGE:
-				done = handle_client_message(e);
-				break;
-			case XCB_EXPOSE:
-				done = handle_expose();
-				break;
-			default:
-				done = handle_default(e);
-				break;
-			}
-			free(e);
-		}
+		done = handle_events();
 	}
 }
 
