@@ -38,4 +38,11 @@ Enjoy!
 
 ## [x11](https://en.wikipedia.org/wiki/X_Window_System)
 
-- in progress
+- complexity is moderately convoluted, but maybe not quite as bad as GTK; the
+  API definitely shows its age though
+- documentation is voluminous although scattered around the web and often on
+  sites from the late 1990s; details are often missing, for example what an
+  error handler should return
+- it's not entirely clear when certain things can be freed and how they should
+  be; [valgrind](https://en.wikipedia.org/wiki/Valgrind) detect leaks although
+  the sanitizers don't seem to
