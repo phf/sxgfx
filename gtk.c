@@ -5,6 +5,7 @@
  */
 
 #include <gtk/gtk.h>
+
 #include <stdlib.h>
 
 #define TITLE "Boxes Demo (gtk)"

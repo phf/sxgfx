@@ -17,6 +17,10 @@ gtk: LDLIBS+=`pkg-config --libs gtk+-3.0`
 x11: CFLAGS+=`pkg-config --cflags x11`
 x11: LDLIBS+=`pkg-config --libs x11`
 
-.PHONY: all clean
+.PHONY: all check clean format
 clean:
 	$(RM) $(ALL)
+check:
+	cppcheck --enable=all --std=c11 .
+format:
+	clang-format -i *.c
